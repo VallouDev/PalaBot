@@ -1,5 +1,4 @@
 const {ChannelType, Collection, Events} = require('discord.js');
-const config = require('../config.js');
 const cooldown = new Collection();
 
 module.exports = {
@@ -15,11 +14,6 @@ module.exports = {
 			return;
 		}
 
-		const {prefix} = config;
-		if (!message.content.startsWith(prefix)) {
-			return;
-		}
-
 		const args = message.content.slice(prefix.length).trim().split(/ +/g);
 		const cmd = args.shift().toLowerCase();
 
@@ -31,9 +25,6 @@ module.exports = {
 		command ||= client.commands.get(client.commandAliases.get(cmd));
 
 		if (command) {
-			if (command.ownerOnly && message.author.id !== config.owner) {
-				return message.reply({content: 'Seul le développeur peut effectuer ceci.'});
-			}
 
 			if (command.cooldown) {
 				if (cooldown.has(`${command.name}-${message.author.id}`)) {

@@ -1,6 +1,5 @@
 const {Collection, Events, InteractionType} = require('discord.js');
 const cooldown = new Collection();
-const config = require('../config.js');
 
 module.exports = {
 	name: Events.InteractionCreate,
@@ -14,9 +13,6 @@ module.exports = {
 
 			try {
 				const command = client.slashCommands.get(interaction.commandName);
-				if (command.ownerOnly && interaction.user.id !== config.owner) {
-					return interaction.reply({content: 'Seul le développeur peut effectuer ceci.', ephemeral: true}); 
-				}
 
 				if (command.cooldown) { //Cooldown des messages
 					if (cooldown.has(`${command.name}-${interaction.user.id}`)) {
