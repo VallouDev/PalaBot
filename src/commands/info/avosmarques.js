@@ -23,17 +23,23 @@ exports.commandBase = {
             var hoursdeb = datedeb.getHours();
             var hoursfin = datefin.getHours();
             var minutesdeb = "" + datedeb.getMinutes();
-            var minutesfin = "0" + (datedeb.getMinutes()-30);
+            var minutesfin = "" + datedeb.getMinutes();
             var secondsdeb = "0" + datedeb.getSeconds();
             var secondsfin = "0" + datefin.getSeconds();
 
             var converteddeb = hoursdeb + 'h ' + minutesdeb.substring(-4) + ':' + secondsdeb.substring(-2);
             var convertedfin = hoursfin + 'h ' + minutesfin.substring(-4) + ':' + secondsfin.substring(-2);
 
-            const start = out.extra.indexOf(':') + 1; // Trouver l'index de ':' et ajouter 1 pour commencer juste après
-            const end = out.extra.indexOf('/'); // Trouver l'index de '/'
-            const result = out.extra.substring(start, end);
+            var result = "";
 
+            if( out.extra.indexOf(':') != -1 && out.extra.indexOf('/') != -1 ){
+                const start = out.extra.indexOf(':') + 1; // Trouver l'index de ':' et ajouter 1 pour commencer juste après
+                const end = out.extra.indexOf('/'); // Trouver l'index de '/'
+                result = out.extra.substring(start, end);
+            }
+            else{
+                result = out.extra;
+            }   
             const embed = new EmbedBuilder()
                 .setColor(Colors.Purple)
                 .setTitle("Prochain à vos marques")
