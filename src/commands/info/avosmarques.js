@@ -8,7 +8,7 @@ exports.commandBase = {
 	cooldown: 5000, 
 	ownerOnly: false, 
 	async slashRun(client, interaction) {
-        //const url = new URL ("https://api.paladium.games/v1/status" );
+        //const url = new URL ("" );
         fetch('https://api.paladium.games/v1/paladium/faction/onyourmarks')
         .then(res => res.json())
         .then((out) => {
@@ -18,23 +18,21 @@ exports.commandBase = {
             let debut = out.start.toString();
             let fin = out.end.toString();
 
-            var datedeb = new Date(debut * 1000);
-            var datefin = new Date(fin * 1000);
-            var hoursdeb = datedeb.getHours();
-            var hoursfin = datefin.getHours();
-            var minutesdeb = "" + datedeb.getMinutes();
-            var minutesfin = "" + datedeb.getMinutes();
-            var secondsdeb = "0" + datedeb.getSeconds();
-            var secondsfin = "0" + datefin.getSeconds();
-
-            var converteddeb = hoursdeb + 'h ' + minutesdeb.substring(-4) + ':' + secondsdeb.substring(-2);
-            var convertedfin = hoursfin + 'h ' + minutesfin.substring(-4) + ':' + secondsfin.substring(-2);
-
             var result = "";
 
+            result = out.extra;
+
+            if(out.extra == "" && out.goaltype == "FISHING"){
+                out.extra = "Fish";
+            }
             if( out.extra.indexOf(':') != -1 && out.extra.indexOf('/') != -1 ){
                 const start = out.extra.indexOf(':') + 1; // Trouver l'index de ':' et ajouter 1 pour commencer juste après
                 const end = out.extra.indexOf('/'); // Trouver l'index de '/'
+                result = out.extra.substring(start, end);
+            }
+            if( out.extra.indexOf('.') != -1 && out.extra.indexOf('.') != -1 ){
+                const start = out.extra.indexOf('.') + 1; // Trouver l'index de ':' et ajouter 1 pour commencer juste après
+                const end = out.extra.indexOf('.'); // Trouver l'index de '/'
                 result = out.extra.substring(start, end);
             }
             else{
@@ -44,10 +42,11 @@ exports.commandBase = {
                 .setColor(Colors.Purple)
                 .setTitle("Prochain à vos marques")
                 .addFields(
-                    { name: "Bloc à casser", value : result.charAt(0).toUpperCase() + result.substring(1)},
+                    { name: "Bloc à casser", value : result//.charAt(0).toUpperCase() + result.substring(1)
+                        },
                     { name: "Quantité", value : out.amount.toString()},
-                    { name: "Heure de début", value : converteddeb},
-                    { name: "Heure de fin", value : convertedfin}
+                    { name: "Heure de début", value : "<t:" + debut + ":F>"},
+                    { name: "Heure de fin", value :  "<t:" + fin + ":F>"}
                 )
                 .setTimestamp()
 
